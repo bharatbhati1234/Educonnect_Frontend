@@ -1,4 +1,8 @@
 
+
+// Header(Navbar) ------------------------------------------------------------------
+
+
 // npm install lucide-react
 
 
@@ -33,7 +37,7 @@ export default function Navbar() {
   return (
     <header className="w-full">
 
-      {/* 🔝 TOP BAR (NOT STICKY) */}
+      {/* TOP BAR (NOT STICKY) */}
       <div className="bg-[#0f172a] text-gray-300 text-[13px] overflow-hidden">
         <div className="max-w-[1200px] mx-auto px-4 w-full">
 
@@ -81,7 +85,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* 🔽 MAIN NAVBAR */}
+      {/*  MAIN NAVBAR */}
       <div
         className={`bg-white w-full z-50 transition-all duration-300 ${sticky
           ? "fixed top-0 shadow-md animate-slideDown"
@@ -120,7 +124,7 @@ export default function Navbar() {
               </span>
             </div>
 
-            {/* 🔥 HAMBURGER RIGHT SIDE */}
+            {/* HAMBURGER RIGHT SIDE */}
             <button
               className="md:hidden"
               onClick={() => setOpen(true)}
@@ -132,7 +136,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* 🔥 MOBILE SIDEBAR */}
+      {/* MOBILE SIDEBAR */}
       <div
         className={`fixed top-0 left-0 h-full w-[260px] bg-white shadow-lg z-50 transform transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full"
           }`}

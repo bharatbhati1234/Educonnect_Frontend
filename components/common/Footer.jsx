@@ -18,7 +18,10 @@ export default function Footer() {
       {/* BACKGROUND IMAGE */}
       <div
         className="absolute inset-0 bg-no-repeat bg-left-top opacity-10"
-        style={{ backgroundImage: "url('/footer-bg-image.webp')" }}
+        style={{ backgroundImage: "url('/footer-bg-image.webp')",
+                 backgroundSize: "cover",
+                  backgroundPosition: "center",
+                 backgroundRepeat: "no-repeat", }}
       />
 
       {/* MAIN CONTENT */}
@@ -134,8 +137,8 @@ export default function Footer() {
       <div className="border-t">
         <div className="max-w-[1200px] mx-auto px-4 py-4 text-center text-sm text-gray-600">
           Copyright 2026{" "}
-          <span className="text-green-600 font-medium">EduConnect</span> | Developed By{" "}
-          <span className="text-green-600 font-medium">Bharat Bhati</span>. All Rights Reserved
+          <span className="text-[#1ab69d] font-medium">EduConnect</span> | Developed By{" "}
+          <span className="text-[#1ab69d] font-medium">Bharat Bhati</span>. All Rights Reserved
         </div>
       </div>
     </footer>
