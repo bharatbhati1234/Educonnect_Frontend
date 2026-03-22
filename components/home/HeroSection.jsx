@@ -77,167 +77,129 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 export default function Hero() {
-  return (
-    <section className="relative overflow-hidden bg-[#f5f9fa]">
-      
-      {/* CONTAINER */}
-      <div className="max-w-[1200px] mx-auto px-4 py-16 lg:py-24 grid lg:grid-cols-2 gap-10 items-center">
-        
-        {/* LEFT CONTENT */}
-        <div className="relative z-10">
-          
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
-            Get <span className="text-[#1ab69d]">2500+</span> <br />
-            Best Online Courses <br />
-            From EduBlink
-          </h1>
+    return (
+        <section className="relative overflow-hidden bg-[#f5f9fa]">
 
-          <p className="mt-5 text-gray-600 text-sm sm:text-base max-w-md">
-            Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit.
-          </p>
+            {/* CONTAINER */}
+            <div className="max-w-[1200px] mx-auto px-4 py-16 lg:py-0 grid lg:grid-cols-2 gap-10 items-center">
 
-          <Link
-            href="/courses"
-            className="inline-flex items-center gap-2 mt-6 bg-[#1ab69d] hover:bg-[#159f8a] text-white px-8 py-4 rounded-md text-sm font-medium transition"
-          >
-            Find Courses
-            <ArrowRight size={18} />
-          </Link>
-        </div>
+                {/* LEFT CONTENT */}
+                <div className="relative z-10">
 
-        {/* RIGHT IMAGE */}
-        <div className="relative flex justify-center lg:justify-end">
-          
-          <div className="relative z-10">
-            <Image
-              src="/girl-1.webp" 
-              alt="hero"
-              width={500}
-              height={600}
-              className="w-[280px] sm:w-[350px] lg:w-[480px] h-auto object-contain"
-              priority
-            />
-          </div>
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+                        Get <span className="text-[#1ab69d]">2500+</span> <br />
+                        Best Online Courses <br />
+                        From EduBlink
+                    </h1>
 
-          {/* FLOATING CARD */}
-          <div className="hidden sm:block absolute bottom-10 right-140 bg-white shadow-lg rounded-xl px-4 py-3">
-            <div className="flex items-center gap-3">
-              <Image
-                src="/author-1-1-1.png"
-                alt="instructor"
-                width={300}
-                height={200}
-                className="rounded-full p-[10px_20px]"
-              />
-              <div className="text-xs">
-                <span className="text-[#1ab69d] font-bold">200+</span>
-                <br />
-                Instructors
-              </div>
+                    <p className="mt-5 text-gray-600 text-sm sm:text-base max-w-md">
+                        Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit.
+                    </p>
+
+                    <Link
+                        href="/courses"
+                        className="inline-flex items-center gap-2 mt-6 bg-[#1ab69d] hover:bg-[#159f8a] text-white px-8 py-4 rounded-md text-sm font-medium transition"
+                    >
+                        Find Courses
+                        <ArrowRight size={18} />
+                    </Link>
+                </div>
+
+                {/* RIGHT IMAGE */}
+                <div className="relative flex justify-center lg:justify-end">
+
+                    <div className="relative z-10">
+                        <Image
+                            src="/girl-1.webp"
+                            alt="hero"
+                            width={500}
+                            height={600}
+                            className="w-[280px] sm:w-[350px] lg:w-[480px] h-auto object-contain"
+                            priority
+                        />
+                    </div>
+
+                    {/* FLOATING CARD */}
+                    <div className="hidden sm:block absolute bottom-18 left-5 lg:-right-10 bg-white shadow-lg rounded-xl px-4 py-3 w-[260px] z-20">
+
+                        <h1 className="text-sm font-semibold text-gray-900 mb-2">
+                            Instructor
+                        </h1>
+
+                        <div className="flex items-center gap-3">
+
+                            <Image
+                                src="/author-1-1-1.png"
+                                alt="instructor"
+                                width={80}
+                                height={80}
+                                className="rounded-full w-[160px] h-[50px]"
+                            />
+
+                            <div className="text-xs leading-tight">
+                                <span className="text-[#1ab69d] font-bold text-sm">
+                                    200+
+                                </span>
+                                <br />
+                                <span className="text-gray-700">
+                                    Instructors
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
             </div>
-          </div>
 
-        </div>
-      </div>
+            {/* BACKGROUND SHAPES */}
 
-      {/* BACKGROUND SHAPES */}
-      
-      <Image
-        src="/shape-13.png"
-        alt=""
-        width={186}
-        height={186}
-        className="hidden lg:block absolute top-40 left-20 animate-pulse"
-      />
+            <Image
+                src="/shape-13.png"
+                alt=""
+                width={186}
+                height={186}
+                className="hidden lg:block absolute top-40 left-20 animate-pulse"
+            />
 
-      <Image
-        src="/shape-02.png"
-        alt=""
-        width={140}
-        height={100}
-        className="hidden lg:block z-[10] absolute top-50 right-53"
-      />
-
-      <Image
-        src="/shape-04.png"
-        alt=""
-        width={100}
-        height={50}
-        className="hidden lg:block rounded-[100%] absolute top-1/2 left-1/3"
-      />
-
-      <Image
-        src="/shape-04-1.png"
-        alt=""
-        width={50}
-        height={50}
-        className="hidden lg:block absolute top-1/2 left-1/3 "
-      />
+            <Image
+                src="/shape-02.png"
+                alt=""
+                width={140}
+                height={100}
+                className="hidden lg:block z-[10] absolute top-50 right-53"
+            />
 
 
-      <Image
-        src="/shape-05.png"
-        alt=""
-        width={50}
-        height={50}
-        className="hidden lg:block absolute top-1/2 left-1/3"
-      />
+            <Image
+                src="/shape-15.png"
+                alt=""
+                width={100}
+                height={100}
+                className="hidden lg:block absolute top-35 right-140"
+            />
 
 
-      <Image
-        src="/shape-06.png"
-        alt=""
-        width={50}
-        height={50}
-        className="hidden lg:block absolute top-1/2 left-1/3"
-      />
+            <Image
+                src="/shape-16.png"
+                alt=""
+                width={150}
+                height={180}
+                className="hidden lg:block absolute top-50 right-115 "
+            />
 
 
-      <Image
-        src="/shape-12.png"
-        alt=""
-        width={50}
-        height={50}
-        className="hidden lg:block absolute top-1/2 left-1/3"
-      />
 
+            <Image
+                src="/shape-13.png"
+                alt=""
+                width={186}
+                height={186}
+                className="hidden lg:block absolute bottom-30 right-20"
+            />
 
-      <Image
-        src="/shape-15.png"
-        alt=""
-        width={100}
-        height={100}
-        className="hidden lg:block absolute top-35 right-140"
-      />
-
-
-      <Image
-        src="/shape-16.png"
-        alt=""
-        width={150}
-        height={180}
-        className="hidden lg:block absolute top-50 right-115 "
-      />
-
-
-      <Image
-        src="/shape-36-1.png"
-        alt=""
-        width={50}
-        height={50}
-        className="hidden lg:block absolute top-1/2 left-1/3"
-      />
-
-      <Image
-        src="/shape-13.png"
-        alt=""
-        width={186}
-        height={186}
-        className="hidden lg:block absolute bottom-30 right-20"
-      />
-
-    </section>
-  );
+        </section>
+    );
 }
 
 
