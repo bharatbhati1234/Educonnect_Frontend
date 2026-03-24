@@ -1,6 +1,8 @@
 import "./globals.css";
 import Navbar from "@/components/common/Navbar";
 import Footer from "@/components/common/Footer";
+import { Providers } from "./providers";
+
 
 export const metadata = {
   title: "EduConnect",
@@ -12,7 +14,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <Navbar />
-        {children}
+        <Providers>{children}</Providers>
         <Footer />
       </body>
     </html>
