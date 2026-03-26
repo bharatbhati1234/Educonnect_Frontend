@@ -4,6 +4,7 @@ import HeroStats from "@/components/home/HeroStats";
 import Categories from "@/components/home/Categories";
 import AboutSection from "@/components/about/AboutSection";
 import PopularCourses from "@/components/home/PopularCourses";
+import PopularInstructors from "@/components/home/PopularInstructors";
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
     <Categories/>
     <AboutSection/>
     <PopularCourses/>
+    <PopularInstructors/>
     </>
   );
 }
