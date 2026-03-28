@@ -8,6 +8,8 @@
 
 "use client";
 
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "@/redux/slices/authSlice";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -20,9 +22,18 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
+
+
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [sticky, setSticky] = useState(false);
+
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  
+
+
 
   // 🔥 Sticky on scroll
   useEffect(() => {
@@ -33,6 +44,8 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+
 
   return (
     <header className="w-full">
@@ -67,12 +80,23 @@ export default function Navbar() {
             {/* RIGHT */}
             <div className="flex items-center gap-3 md:gap-6 shrink-0">
 
-              <Link
-                href="/login"
-                className="hover:text-white whitespace-nowrap font-bold"
-              >
-                Login / Register
-              </Link>
+
+              {user ? (
+                <div>
+                  Hi, {user.name}
+                  <button
+                    onClick={() => dispatch(logout())}
+                    className="ml-2 text-red-500 font-semibold"
+                  >
+                    Logout
+                  </button>                </div>
+              ) : (
+                <>
+                  <Link href="/login">Login</Link>
+                  <Link href="/register">Register</Link>
+                </>
+              )}
+
 
               <button className="bg-[#1ab69d] hover:bg-[#6ec1e4] font-bold text-white px-3 md:px-4 h-[32px] flex items-center rounded font-medium whitespace-nowrap">
                 Apply Now →

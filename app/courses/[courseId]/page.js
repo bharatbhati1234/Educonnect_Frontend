@@ -9,6 +9,8 @@ import { fetchSingleCourse } from "@/redux/slices/courseSlice";
 import { useParams } from "next/navigation";
 import { BASE_URL } from "@/utils/constants";
 import CourseCurriculum from "@/components/course/CourseCurriculum";
+import { enroll, checkEnroll } from "@/redux/slices/enrollSlice";
+import { useRouter } from "next/navigation";
 
 // icons
 import { BookOpen, Folder, IndianRupee } from "lucide-react";
@@ -16,6 +18,9 @@ import { BookOpen, Folder, IndianRupee } from "lucide-react";
 const CourseDetail = () => {
   const { courseId } = useParams();
   const dispatch = useDispatch();
+  const router = useRouter();
+
+const { enrolled } = useSelector((state) => state.enroll);
 
   const { singleCourse, loading } = useSelector(
     (state) => state.courses
@@ -23,11 +28,12 @@ const CourseDetail = () => {
 
   const [activeTab, setActiveTab] = useState("overview");
 
-  useEffect(() => {
-    if (courseId) {
-      dispatch(fetchSingleCourse(courseId));
-    }
-  }, [dispatch, courseId]);
+useEffect(() => {
+  if (courseId) {
+    dispatch(fetchSingleCourse(courseId));
+    dispatch(checkEnroll(courseId));
+  }
+}, [dispatch, courseId]);
 
   if (loading || !singleCourse) {
     return <p className="text-center mt-20">Loading...</p>;
@@ -87,9 +93,18 @@ const CourseDetail = () => {
           </div>
 
           {/* BUTTON */}
-          <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg w-full transition">
-            Enroll Now
-          </button>
+          <button
+  onClick={() => {
+    if (enrolled) {
+      router.push(`/learn/${courseId}`);
+    } else {
+      dispatch(enroll(courseId));
+    }
+  }}
+  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg w-full transition"
+>
+  {enrolled ? "Go to Course" : "Enroll Now"}
+</button>
 
         </div>
       </div>
