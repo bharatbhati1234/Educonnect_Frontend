@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCourses } from "@/redux/slices/courseSlice";
 import CourseCard from "@/components/course/CourseCard";
 
+
 const CoursesPage = () => {
   const dispatch = useDispatch();
   const { courses, loading } = useSelector((state) => state.courses);
