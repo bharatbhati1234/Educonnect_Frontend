@@ -2,36 +2,42 @@
 // enrollSlice.js file -----------------------------------------------------------------------------
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { enrollCourse, checkEnrollment } from "@/services/enrollApi";
+import { enrollCourse, getEnrolledCourses } from "@/services/enrollApi";
 
+// enroll
 export const enroll = createAsyncThunk(
   "enroll/enrollCourse",
   async (courseId) => {
-    await enrollCourse(courseId);
-    return true;
+    const res = await enrollCourse(courseId); // ✅ FIXED
+    return res.data;
   }
 );
 
-export const checkEnroll = createAsyncThunk(
-  "enroll/check",
-  async (courseId) => {
-    const res = await checkEnrollment(courseId);
-    return res.data.enrolled;
+// get my courses
+export const fetchEnrolledCourses = createAsyncThunk(
+  "enroll/getEnrolledCourses",
+  async () => {
+    const res = await getEnrolledCourses();
+    return res.data;
   }
 );
 
 const enrollSlice = createSlice({
   name: "enroll",
   initialState: {
-    enrolled: false,
+    enrolledCourses: [],
+    loading: false,
   },
   extraReducers: (builder) => {
     builder
-      .addCase(enroll.fulfilled, (state) => {
-        state.enrolled = true;
+      .addCase(enroll.pending, (state) => {
+        state.loading = true;
       })
-      .addCase(checkEnroll.fulfilled, (state, action) => {
-        state.enrolled = action.payload;
+      .addCase(enroll.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(fetchEnrolledCourses.fulfilled, (state, action) => {
+        state.enrolledCourses = action.payload.courses;
       });
   },
 });

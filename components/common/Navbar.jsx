@@ -28,14 +28,17 @@ import { useState, useEffect } from "react";
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [sticky, setSticky] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  
 
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  // 🔥 Sticky on scroll
+  //  Sticky on scroll
   useEffect(() => {
     const handleScroll = () => {
       setSticky(window.scrollY > 80);
@@ -81,15 +84,19 @@ export default function Navbar() {
             <div className="flex items-center gap-3 md:gap-6 shrink-0">
 
 
-              {user ? (
-                <div>
-                  Hi, {user.name}
+              {mounted && user ? (
+                <div className="flex items-center gap-3">
+                  <span className="font-semibold">
+                    Hi, {user.name}
+                  </span>
+
                   <button
                     onClick={() => dispatch(logout())}
-                    className="ml-2 text-red-500 font-semibold"
+                    className="text-red-500 hover:text-red-600 text-sm"
                   >
                     Logout
-                  </button>                </div>
+                  </button>
+                </div>
               ) : (
                 <>
                   <Link href="/login">Login</Link>

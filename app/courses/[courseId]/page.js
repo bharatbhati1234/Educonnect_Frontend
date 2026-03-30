@@ -6,11 +6,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSingleCourse } from "@/redux/slices/courseSlice";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { BASE_URL } from "@/utils/constants";
 import CourseCurriculum from "@/components/course/CourseCurriculum";
-import { enroll, checkEnroll } from "@/redux/slices/enrollSlice";
-import { useRouter } from "next/navigation";
+import { enroll, fetchEnrolledCourses } from "@/redux/slices/enrollSlice";
 
 // icons
 import { BookOpen, Folder, IndianRupee } from "lucide-react";
@@ -20,7 +19,18 @@ const CourseDetail = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-const { enrolled } = useSelector((state) => state.enroll);
+  const { token } = useSelector((state) => state.auth);
+
+  const storedToken =
+    typeof window !== "undefined"
+      ? localStorage.getItem("token")
+      : null;
+
+  const { enrolledCourses } = useSelector((state) => state.enroll);
+
+  const enrolled = enrolledCourses?.some(
+    (c) => c._id === courseId
+  );
 
   const { singleCourse, loading } = useSelector(
     (state) => state.courses
@@ -28,24 +38,52 @@ const { enrolled } = useSelector((state) => state.enroll);
 
   const [activeTab, setActiveTab] = useState("overview");
 
-useEffect(() => {
-  if (courseId) {
-    dispatch(fetchSingleCourse(courseId));
-    dispatch(checkEnroll(courseId));
-  }
-}, [dispatch, courseId]);
+  // course fetch
+  useEffect(() => {
+    if (courseId) {
+      dispatch(fetchSingleCourse(courseId));
+    }
+  }, [dispatch, courseId]);
+
+  // ✅ FIXED (correct function)
+  useEffect(() => {
+    if (token || storedToken) {
+      dispatch(fetchEnrolledCourses());
+    }
+  }, [dispatch, token]);
 
   if (loading || !singleCourse) {
     return <p className="text-center mt-20">Loading...</p>;
   }
 
+  const handleEnroll = async () => {
+    if (!token && !storedToken) {
+      router.push("/login");
+      return;
+    }
+
+    if (enrolled) {
+      router.push(`/learn/${courseId}`);
+      return;
+    }
+
+    try {
+      await dispatch(enroll(courseId)).unwrap();
+      router.push("/my-courses");
+    } catch (error) {
+      if (error?.message === "Already enrolled") {
+        router.push(`/learn/${courseId}`);
+      } else {
+        console.log(error);
+      }
+    }
+  };
+
   return (
     <div className="max-w-[1200px] mx-auto px-4 py-16">
 
-      {/* TOP SECTION */}
       <div className="grid md:grid-cols-2 gap-10">
 
-        {/* IMAGE */}
         <div>
           <img
             src={`${BASE_URL}${singleCourse.thumbnail}`}
@@ -53,9 +91,7 @@ useEffect(() => {
           />
         </div>
 
-        {/* CONTENT */}
         <div>
-
           <h1 className="text-3xl font-bold mb-3">
             {singleCourse.title}
           </h1>
@@ -67,7 +103,6 @@ useEffect(() => {
             </span>
           </p>
 
-          {/* INFO */}
           <div className="flex gap-6 text-sm text-gray-600 mb-6 items-center">
 
             {singleCourse.sections && (
@@ -86,33 +121,23 @@ useEffect(() => {
 
           </div>
 
-          {/* PRICE */}
           <div className="flex items-center gap-2 text-2xl font-bold text-green-600 mb-6">
             <IndianRupee size={20} />
             {singleCourse.price}
           </div>
 
-          {/* BUTTON */}
           <button
-  onClick={() => {
-    if (enrolled) {
-      router.push(`/learn/${courseId}`);
-    } else {
-      dispatch(enroll(courseId));
-    }
-  }}
-  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg w-full transition"
->
-  {enrolled ? "Go to Course" : "Enroll Now"}
-</button>
+            onClick={handleEnroll}
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg w-full transition"
+          >
+            {enrolled ? "Go to Course" : "Enroll Now"}
+          </button>
 
         </div>
       </div>
 
-      {/* TABS SECTION */}
       <div className="mt-12">
 
-        {/* TAB BUTTONS */}
         <div className="flex gap-8 border-b pb-3 mb-6 text-lg font-medium">
           <button
             onClick={() => setActiveTab("overview")}
@@ -137,16 +162,12 @@ useEffect(() => {
           </button>
         </div>
 
-        {/* TAB CONTENT */}
-
-        {/* OVERVIEW */}
         {activeTab === "overview" && (
           <div className="text-gray-700 leading-relaxed max-w-[800px]">
             {singleCourse.description}
           </div>
         )}
 
-        {/* CURRICULUM */}
         {activeTab === "curriculum" && (
           <CourseCurriculum sections={singleCourse.sections || []} />
         )}

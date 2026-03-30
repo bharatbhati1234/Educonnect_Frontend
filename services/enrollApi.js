@@ -2,8 +2,12 @@
 
 import api from "./api";
 
-export const enrollCourse = (courseId) =>
-  api.post("/enroll", { courseId });
+// enroll
+export const enrollCourse = (courseId) => {
+  return api.post("/enroll", { courseId });
+};
 
-export const checkEnrollment = (courseId) =>
-  api.get(`/getenrollcourse/${courseId}`);
+// get enrolled courses
+export const getEnrolledCourses = () => {
+  return api.get("/my-courses");
+};

@@ -11,7 +11,7 @@ import enrollReducer from "./slices/enrollSlice";
 
 export const store = configureStore({
   reducer: {
-    auth:authReducer,
+    auth: authReducer,
     courses: courseReducer,
     categories: categoryReducer,
     instructors: instructorReducer, 
