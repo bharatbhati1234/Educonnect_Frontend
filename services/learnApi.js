@@ -2,7 +2,7 @@
 
 import api from "./api";
 
-// ✅ Get full course content (course + sections + lessons)
+// ✅ Get full course content
 export const getCourseContent = async (courseId) => {
   try {
     const courseRes = await api.get(`/getcoursebyid/${courseId}`);
@@ -10,7 +10,7 @@ export const getCourseContent = async (courseId) => {
 
     return {
       ...courseRes.data,
-      sections: sectionRes.data
+      sections: sectionRes.data.sections || sectionRes.data || []
     };
 
   } catch (error) {
@@ -19,10 +19,10 @@ export const getCourseContent = async (courseId) => {
   }
 };
 
-
 // ✅ Mark lesson complete
-export const markComplete = async (lessonId) => {
+export const markComplete = async (courseId, lessonId) => {
   const res = await api.post(`/enrollments/complete-lesson`, {
+    courseId,
     lessonId
   });
   return res.data;

@@ -1,4 +1,5 @@
-// learn / [courseId].jsx file ------------------------------------------------------
+// learn / [courseId] /  page.js file ----------------------------------------------------------
+
 
 "use client";
 
@@ -18,22 +19,29 @@ export default function LearnPage() {
   const [completedLessons, setCompletedLessons] = useState([]);
 
   useEffect(() => {
-    fetchCourse();
-  }, []);
+    if (courseId) fetchCourse();
+  }, [courseId]);
 
   const fetchCourse = async () => {
     try {
       const data = await getCourseContent(courseId);
+
+      // ✅ SAFE CHECK
+      if (!data || !data.sections) {
+        setCourse(null);
+        return;
+      }
+
       setCourse(data);
 
-      const lessons = data.sections.flatMap(s => s.lessons);
+      const lessons = data.sections.flatMap(s => s?.lessons || []);
       setAllLessons(lessons);
 
       // ▶ Resume last lesson
       const last = localStorage.getItem("lastLesson");
       const found = lessons.find(l => l._id === last);
 
-      setCurrentLesson(found || lessons[0]);
+      setCurrentLesson(found || lessons[0] || null);
 
     } catch (err) {
       console.log(err);
@@ -49,6 +57,8 @@ export default function LearnPage() {
 
   // ⏭ Next Lesson
   const nextLesson = () => {
+    if (!currentLesson) return;
+
     const index = allLessons.findIndex(l => l._id === currentLesson._id);
     if (index < allLessons.length - 1) {
       setCurrentLesson(allLessons[index + 1]);
@@ -57,6 +67,8 @@ export default function LearnPage() {
 
   // ⏮ Prev Lesson
   const prevLesson = () => {
+    if (!currentLesson) return;
+
     const index = allLessons.findIndex(l => l._id === currentLesson._id);
     if (index > 0) {
       setCurrentLesson(allLessons[index - 1]);
@@ -65,8 +77,10 @@ export default function LearnPage() {
 
   // ✅ Mark Complete
   const handleComplete = async () => {
+    if (!currentLesson) return;
+
     try {
-      await markComplete(currentLesson._id);
+      await markComplete(course._id, currentLesson._id);
 
       setCompletedLessons(prev => {
         if (prev.includes(currentLesson._id)) return prev;
@@ -85,6 +99,10 @@ export default function LearnPage() {
 
   if (!course) return <p>Loading...</p>;
 
+  if (!course.sections || course.sections.length === 0) {
+    return <p>No content available ❌</p>;
+  }
+
   return (
     <div className="flex h-screen">
       
@@ -99,7 +117,11 @@ export default function LearnPage() {
       <div className="flex-1 p-4">
 
         {/* 🎥 Video */}
-        <VideoPlayer lesson={currentLesson} />
+        {currentLesson ? (
+          <VideoPlayer lesson={currentLesson} />
+        ) : (
+          <p>No lesson selected</p>
+        )}
 
         {/* ⏭ Controls */}
         <div className="flex gap-3 mt-4">

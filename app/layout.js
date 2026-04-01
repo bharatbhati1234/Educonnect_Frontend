@@ -1,7 +1,8 @@
 import "./globals.css";
-import  Providers  from "./providers";
+import Providers from "./providers";
 import Navbar from "@/components/common/Navbar";
 import Footer from "@/components/common/Footer";
+import Script from "next/script";
 
 
 export const metadata = {
@@ -13,9 +14,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        
+        <Script
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="beforeInteractive"
+        />
+
         <Providers>
-          <Navbar/>
+          <Navbar />
           {children}
         </Providers>
 

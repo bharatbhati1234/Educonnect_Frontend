@@ -9,7 +9,10 @@ import { fetchSingleCourse } from "@/redux/slices/courseSlice";
 import { useParams, useRouter } from "next/navigation";
 import { BASE_URL } from "@/utils/constants";
 import CourseCurriculum from "@/components/course/CourseCurriculum";
-import { enroll, fetchEnrolledCourses } from "@/redux/slices/enrollSlice";
+import { fetchEnrolledCourses } from "@/redux/slices/enrollSlice";
+
+// ✅ NEW: Payment API
+import { createOrder, verifyPayment } from "@/services/paymentApi";
 
 // icons
 import { BookOpen, Folder, IndianRupee } from "lucide-react";
@@ -45,39 +48,86 @@ const CourseDetail = () => {
     }
   }, [dispatch, courseId]);
 
-  // ✅ FIXED (correct function)
+  // enrolled courses fetch
   useEffect(() => {
     if (token || storedToken) {
       dispatch(fetchEnrolledCourses());
     }
   }, [dispatch, token]);
 
-  if (loading || !singleCourse) {
-    return <p className="text-center mt-20">Loading...</p>;
-  }
+  // 🔥 PAYMENT HANDLER
+  const handleBuy = async () => {
 
-  const handleEnroll = async () => {
+    if (!window.Razorpay) {
+      alert("Razorpay not loaded ❌");
+      return;
+    }
+
+
     if (!token && !storedToken) {
       router.push("/login");
       return;
     }
 
+    // already enrolled → direct learn
     if (enrolled) {
       router.push(`/learn/${courseId}`);
       return;
     }
 
     try {
-      await dispatch(enroll(courseId)).unwrap();
-      router.push("/my-courses");
+      const data = await createOrder(courseId);
+      const order = data.order;
+
+      const options = {
+        key: "rzp_test_SXTA80F7phdf5T",
+        amount: order.amount,
+        currency: "INR",
+        order_id: order.id,
+        name: "EduConnect",
+        description: singleCourse.title,
+
+        // ✅ ONLY THIS (IMPORTANT)
+        prefill: {
+          name: "Test User",
+          email: "test@test.com",
+          contact: "9876543210",
+        },
+
+        theme: {
+          color: "#22c55e",
+        },
+
+        handler: async function (response) {
+          console.log("PAYMENT RESPONSE:", response);
+
+          const res = await verifyPayment({
+            ...response,
+            courseId,
+          });
+          console.log("PAYMENT RESPONSE:", response);
+
+
+          if (res.success) {
+            alert("Payment Success 🎉");
+            router.push(`/learn/${courseId}`);
+          }
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+
     } catch (error) {
-      if (error?.message === "Already enrolled") {
-        router.push(`/learn/${courseId}`);
-      } else {
-        console.log(error);
-      }
+      console.log(error);
     }
   };
+
+
+
+  if (loading || !singleCourse) {
+    return <p className="text-center mt-20">Loading...</p>;
+  }
 
   return (
     <div className="max-w-[1200px] mx-auto px-4 py-16">
@@ -126,11 +176,12 @@ const CourseDetail = () => {
             {singleCourse.price}
           </div>
 
+          {/* 🔥 BUTTON CHANGE */}
           <button
-            onClick={handleEnroll}
+            onClick={handleBuy}
             className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg w-full transition"
           >
-            {enrolled ? "Go to Course" : "Enroll Now"}
+            {enrolled ? "Go to Course" : "Buy Now"}
           </button>
 
         </div>
