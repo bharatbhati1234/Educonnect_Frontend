@@ -13,6 +13,6 @@ export const createOrder = async (courseId) => {
 
 // ✅ Verify Payment
 export const verifyPayment = async (paymentData) => {
-  const res = await api.post("/payment/verify-payment", paymentData);
+  const res = await api.post("/payment/verify", paymentData);
   return res.data;
 };

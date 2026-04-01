@@ -99,20 +99,18 @@ const CourseDetail = () => {
         },
 
         handler: async function (response) {
-          console.log("PAYMENT RESPONSE:", response);
-
           const res = await verifyPayment({
-            ...response,
-            courseId,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            courseId: courseId   
           });
-          console.log("PAYMENT RESPONSE:", response);
-
 
           if (res.success) {
             alert("Payment Success 🎉");
             router.push(`/learn/${courseId}`);
           }
-        },
+        }
       };
 
       const rzp = new window.Razorpay(options);
