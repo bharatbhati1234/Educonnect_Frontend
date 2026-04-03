@@ -10,7 +10,7 @@ import VideoPlayer from "@/components/learn/VideoPlayer";
 import Sidebar from "@/components/learn/Sidebar";
 
 export default function LearnPage() {
-    
+
   const { courseId } = useParams();
 
   const [course, setCourse] = useState(null);
@@ -80,7 +80,8 @@ export default function LearnPage() {
     if (!currentLesson) return;
 
     try {
-      await markComplete(course._id, currentLesson._id);
+      await markComplete(courseId, currentLesson._id);
+     
 
       setCompletedLessons(prev => {
         if (prev.includes(currentLesson._id)) return prev;
@@ -105,16 +106,16 @@ export default function LearnPage() {
 
   return (
     <div className="flex h-screen">
-      
+
       {/* Sidebar */}
-      <Sidebar 
+      <Sidebar
         sections={course.sections}
         currentLesson={currentLesson}
         setCurrentLesson={setCurrentLesson}
       />
 
       {/* Video Section */}
-      <div className="flex-1 p-4">
+      <div className="flex-1 p-4 overflow-y-auto">
 
         {/* 🎥 Video */}
         {currentLesson ? (

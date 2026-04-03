@@ -9,5 +9,5 @@ export const enrollCourse = (courseId) => {
 
 // get enrolled courses
 export const getEnrolledCourses = () => {
-  return api.get("/my-courses");
+  return api.get("/enrollments/my-courses");
 };
