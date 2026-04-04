@@ -70,6 +70,13 @@ const LoginPage = () => {
           Login
         </button>
 
+        <p
+          onClick={() => router.push("/forgot-password")}
+          className="text-blue-500 cursor-pointer"
+        >
+          Forgot Password?
+        </p>
+
       </form>
 
     </div>

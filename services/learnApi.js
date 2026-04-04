@@ -19,11 +19,17 @@ export const getCourseContent = async (courseId) => {
   }
 };
 
-// ✅ Mark lesson complete
+//  Mark lesson complete
 export const markComplete = async (courseId, lessonId) => {
   const res = await api.post(`/enrollments/complete-lesson`, {
     courseId,
     lessonId
   });
+  return res.data;
+};
+
+//  Get progress
+export const getProgress = async (courseId) => {
+  const res = await api.get(`/enrollments/progress/${courseId}`);
   return res.data;
 };

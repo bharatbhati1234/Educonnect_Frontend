@@ -5,13 +5,14 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { getCourseContent, markComplete } from "@/services/learnApi";
+import { getCourseContent, markComplete, getProgress } from "@/services/learnApi";
 import VideoPlayer from "@/components/learn/VideoPlayer";
 import Sidebar from "@/components/learn/Sidebar";
 
 export default function LearnPage() {
 
   const { courseId } = useParams();
+  console.log("COURSE ID:", courseId);
 
   const [course, setCourse] = useState(null);
   const [currentLesson, setCurrentLesson] = useState(null);
@@ -22,31 +23,31 @@ export default function LearnPage() {
     if (courseId) fetchCourse();
   }, [courseId]);
 
-  const fetchCourse = async () => {
-    try {
-      const data = await getCourseContent(courseId);
 
-      // ✅ SAFE CHECK
-      if (!data || !data.sections) {
-        setCourse(null);
-        return;
-      }
+const fetchCourse = async () => {
+  try {
+    const data = await getCourseContent(courseId);
+    setCourse(data);
 
-      setCourse(data);
+    const lessons = data.sections.flatMap(s => s.lessons);
+    setAllLessons(lessons);
 
-      const lessons = data.sections.flatMap(s => s?.lessons || []);
-      setAllLessons(lessons);
+    const last = localStorage.getItem("lastLesson");
+    const found = lessons.find(l => l._id === last);
 
-      // ▶ Resume last lesson
-      const last = localStorage.getItem("lastLesson");
-      const found = lessons.find(l => l._id === last);
+    setCurrentLesson(found || lessons[0]);
 
-      setCurrentLesson(found || lessons[0] || null);
+    // ✅ NEW: FETCH PROGRESS
+    const progressData = await getProgress(courseId);
 
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    setCompletedLessons(
+      progressData.completedLessons.map(l => l._id)
+    );
+
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   // ▶ Save last lesson
   useEffect(() => {
@@ -81,7 +82,7 @@ export default function LearnPage() {
 
     try {
       await markComplete(courseId, currentLesson._id);
-     
+
 
       setCompletedLessons(prev => {
         if (prev.includes(currentLesson._id)) return prev;
@@ -119,7 +120,7 @@ export default function LearnPage() {
 
         {/* 🎥 Video */}
         {currentLesson ? (
-          <VideoPlayer lesson={currentLesson} />
+          <VideoPlayer key={currentLesson?._id} lesson={currentLesson} />
         ) : (
           <p>No lesson selected</p>
         )}
