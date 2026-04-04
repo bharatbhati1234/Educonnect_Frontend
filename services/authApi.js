@@ -20,8 +20,9 @@ export const forgotPassword = (email) => {
 };
 
 // verify otp
-export const verifyOtp = (email, otp) => {
-  return api.post("/verify-otp", { email, otp });
+export const verifyOtp = async (data) => {
+  const res = await api.post("/verify-otp", data);
+  return res.data;
 };
 
 // reset password

@@ -4,25 +4,30 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { forgotPassword } from "@/services/authApi";
+import { verifyOtp } from "@/services/authApi";
 
-export default function ForgotPassword() {
+export default function VerifyOtp() {
 
-  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const email = localStorage.getItem("resetEmail");
+
     try {
-      await forgotPassword(email);
+      await verifyOtp({
+        email,
+        otp
+      });
 
-      alert("OTP sent to email 📩");
+      alert("OTP Verified ✅");
 
-      // email save for next step
-      localStorage.setItem("resetEmail", email);
+      localStorage.setItem("resetOtp", otp); 
 
-      router.push("/verify-otp");
+
+      router.push("/reset-password");
 
     } catch (err) {
       console.log(err);
@@ -33,18 +38,18 @@ export default function ForgotPassword() {
     <div className="flex justify-center mt-20">
       <form onSubmit={handleSubmit} className="space-y-4">
 
-        <h2 className="text-2xl font-bold">Forgot Password</h2>
+        <h2 className="text-2xl font-bold">Verify OTP</h2>
 
         <input
-          type="email"
-          placeholder="Enter Email"
+          type="text"
+          placeholder="Enter OTP"
           className="border p-2 w-full"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={otp}
+          onChange={(e) => setOtp(e.target.value)}
         />
 
-        <button className="bg-blue-500 text-white px-4 py-2 rounded w-full">
-          Send OTP
+        <button className="bg-green-500 text-white px-4 py-2 rounded w-full">
+          Verify OTP
         </button>
 
       </form>

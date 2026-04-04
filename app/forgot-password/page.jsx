@@ -11,22 +11,26 @@ export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const router = useRouter();
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
   e.preventDefault();
 
   try {
     const res = await forgotPassword(email);
 
-    console.log("RES:", res);   // 👈 ADD THIS
+    console.log("API RESPONSE:", res);
+    console.log(res.data.message)
 
-    alert("OTP sent to email 📩");
+    // 🔥 FINAL FIX
+    if (res?.data?.message) {
 
-    localStorage.setItem("resetEmail", email);
+      localStorage.setItem("resetEmail", email);
 
-    router.replace("/verify-otp");
+      window.location.href = "/verify-otp";
+
+    }
 
   } catch (err) {
-    console.log("ERROR:", err.response?.data || err.message);
+    console.log(err);
   }
 };
 
@@ -47,6 +51,7 @@ export default function ForgotPassword() {
         <button className="bg-blue-500 text-white px-4 py-2 rounded w-full">
           Send OTP
         </button>
+        
 
       </form>
     </div>

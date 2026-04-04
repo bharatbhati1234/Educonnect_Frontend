@@ -15,9 +15,14 @@ export default function ResetPassword() {
     e.preventDefault();
 
     const email = localStorage.getItem("resetEmail");
+    const otp = localStorage.getItem("resetOtp"); // ✅ get OTP
 
     try {
-      await resetPassword(email, password);
+      await resetPassword({
+        email,
+        otp,
+        newPassword: password // ✅ FIX
+      });
 
       alert("Password reset successful 🔥");
 
