@@ -22,10 +22,10 @@ export default function VerifyOtp() {
         otp
       });
 
+      // ✅ SAVE OTP FOR NEXT STEP
+      localStorage.setItem("otp", otp);
+
       alert("OTP Verified ✅");
-
-      localStorage.setItem("resetOtp", otp); 
-
 
       router.push("/reset-password");
 

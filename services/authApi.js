@@ -15,7 +15,7 @@ export const loginUser = (data) => {
 
 
 // forgot password
-export const forgotPassword = (email) => {
+export const forgotPassword = async (email) => {
   return api.post("/forgot-password", { email });
 };
 
@@ -26,7 +26,8 @@ export const verifyOtp = async (data) => {
 };
 
 // reset password
-export const resetPassword = (email, password) => {
-  return api.post("/reset-password", { email, password });
+export const resetPassword = async (data) => {
+  const res = await api.post("/reset-password", data);
+  return res.data;
 };
 
