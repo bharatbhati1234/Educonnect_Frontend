@@ -21,11 +21,18 @@ import {
   X
 } from "lucide-react";
 import { useState, useEffect } from "react";
-
-
-
+import { usePathname, useRouter } from "next/navigation"; // ✅ ADD
 
 export default function Navbar() {
+
+  const pathname = usePathname();
+  const router = useRouter(); // ✅ ADD
+
+  // ADMIN PAGE PE NAVBAR HIDE
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
+
   const [open, setOpen] = useState(false);
   const [sticky, setSticky] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -33,6 +40,11 @@ export default function Navbar() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
 
+  // ✅ LOGOUT FIX
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push("/login"); // 🔥 REDIRECT
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -48,12 +60,10 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-
-
   return (
     <header className="w-full">
 
-      {/* TOP BAR (NOT STICKY) */}
+      {/* TOP BAR */}
       <div className="bg-[#0f172a] text-gray-300 text-[13px] overflow-hidden">
         <div className="max-w-[1200px] mx-auto px-4 w-full">
 
@@ -83,7 +93,6 @@ export default function Navbar() {
             {/* RIGHT */}
             <div className="flex items-center gap-3 md:gap-6 shrink-0">
 
-
               {mounted && user ? (
                 <div className="flex items-center gap-3">
                   <span className="font-semibold">
@@ -91,7 +100,7 @@ export default function Navbar() {
                   </span>
 
                   <button
-                    onClick={() => dispatch(logout())}
+                    onClick={handleLogout} // ✅ FIX
                     className="text-red-500 hover:text-red-600 text-sm"
                   >
                     Logout
@@ -104,7 +113,6 @@ export default function Navbar() {
                 </>
               )}
 
-
               <button className="bg-[#1ab69d] hover:bg-[#6ec1e4] font-bold text-white px-3 md:px-4 h-[32px] flex items-center rounded font-medium whitespace-nowrap">
                 Apply Now →
               </button>
@@ -116,7 +124,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/*  MAIN NAVBAR */}
+      {/* MAIN NAVBAR */}
       <div
         className={`bg-white w-full z-50 transition-all duration-300 ${sticky
           ? "fixed top-0 shadow-md animate-slideDown"
@@ -125,7 +133,7 @@ export default function Navbar() {
       >
         <div className="max-w-[1200px] mx-auto px-4 py-4 flex justify-between items-center">
 
-          {/* LEFT - LOGO */}
+          {/* LOGO */}
           <Link href="/">
             <Image
               src="/logo.png"
@@ -135,7 +143,7 @@ export default function Navbar() {
             />
           </Link>
 
-          {/* CENTER MENU (Desktop) */}
+          {/* MENU */}
           <nav className="hidden md:flex gap-8 font-medium">
             <Link href="/">Home</Link>
             <Link href="/courses">Courses</Link>
@@ -143,7 +151,7 @@ export default function Navbar() {
             <Link href="/contact">Contact</Link>
           </nav>
 
-          {/* RIGHT SIDE */}
+          {/* RIGHT */}
           <div className="flex items-center gap-4">
 
             <Search className="cursor-pointer" />
@@ -155,7 +163,6 @@ export default function Navbar() {
               </span>
             </div>
 
-            {/* HAMBURGER RIGHT SIDE */}
             <button
               className="md:hidden"
               onClick={() => setOpen(true)}

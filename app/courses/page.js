@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCourses } from "@/redux/slices/courseSlice";
 import CourseCard from "@/components/course/CourseCard";
+import { fetchEnrolledCourses } from "@/redux/slices/enrollSlice";
 
 
 const CoursesPage = () => {
@@ -14,6 +15,7 @@ const CoursesPage = () => {
 
   useEffect(() => {
     dispatch(fetchCourses());
+    dispatch(fetchEnrolledCourses()); 
   }, [dispatch]);
 
   if (loading) return <p className="text-center mt-10">Loading...</p>;

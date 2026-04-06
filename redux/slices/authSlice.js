@@ -31,6 +31,8 @@ const initialState = {
       : null,
 
   loading: false,
+  isAuthChecked: false, 
+
 };
 
 const authSlice = createSlice({
@@ -56,12 +58,16 @@ const authSlice = createSlice({
 
         state.user = action.payload.user;
         state.token = action.payload.token;
+        state.isAuthChecked = true; 
+
 
         localStorage.setItem("token", action.payload.token);
         localStorage.setItem("user", JSON.stringify(action.payload.user));
       })
       .addCase(login.rejected, (state) => {
         state.loading = false;
+        state.isAuthChecked = true; 
+
       })
 
       // REGISTER

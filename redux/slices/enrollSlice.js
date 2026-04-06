@@ -35,6 +35,8 @@ const enrollSlice = createSlice({
       })
       .addCase(enroll.fulfilled, (state) => {
         state.loading = false;
+        state.enrolledCourses.push(action.payload.enrollment);
+
       })
       .addCase(fetchEnrolledCourses.fulfilled, (state, action) => {
         state.enrolledCourses = action.payload.courses;
