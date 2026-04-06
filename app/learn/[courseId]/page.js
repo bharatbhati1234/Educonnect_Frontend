@@ -24,30 +24,30 @@ export default function LearnPage() {
   }, [courseId]);
 
 
-const fetchCourse = async () => {
-  try {
-    const data = await getCourseContent(courseId);
-    setCourse(data);
+  const fetchCourse = async () => {
+    try {
+      const data = await getCourseContent(courseId);
+      setCourse(data);
 
-    const lessons = data.sections.flatMap(s => s.lessons);
-    setAllLessons(lessons);
+      const lessons = data.sections.flatMap(s => s.lessons);
+      setAllLessons(lessons);
 
-    const last = localStorage.getItem("lastLesson");
-    const found = lessons.find(l => l._id === last);
+      const last = localStorage.getItem("lastLesson");
+      const found = lessons.find(l => l._id === last);
 
-    setCurrentLesson(found || lessons[0]);
+      setCurrentLesson(found || lessons[0]);
 
-    // ✅ NEW: FETCH PROGRESS
-    const progressData = await getProgress(courseId);
+      // ✅ NEW: FETCH PROGRESS
+      const progressData = await getProgress(courseId);
 
-    setCompletedLessons(
-      progressData.completedLessons.map(l => l._id)
-    );
+      setCompletedLessons(
+        progressData.completedLessons.map(l => l._id)
+      );
 
-  } catch (err) {
-    console.log(err);
-  }
-};
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   // ▶ Save last lesson
   useEffect(() => {
@@ -105,63 +105,77 @@ const fetchCourse = async () => {
     return <p>No content available ❌</p>;
   }
 
-  return (
-    <div className="flex h-screen">
+ return (
+  <div className="flex flex-col md:flex-row min-h-screen">
 
-      {/* Sidebar */}
+    {/* 📚 SIDEBAR */}
+    <div className="w-full md:w-[330px] border-r bg-gray-100">
       <Sidebar
         sections={course.sections}
         currentLesson={currentLesson}
         setCurrentLesson={setCurrentLesson}
       />
+    </div>
 
-      {/* Video Section */}
-      <div className="flex-1 p-4 overflow-y-auto">
+    {/* 🎥 MAIN CONTENT */}
+    <div className="flex-1 p-4 flex flex-col items-center">
 
-        {/* 🎥 Video */}
-        {currentLesson ? (
-          <VideoPlayer key={currentLesson?._id} lesson={currentLesson} />
-        ) : (
-          <p>No lesson selected</p>
-        )}
-
-        {/* ⏭ Controls */}
-        <div className="flex gap-3 mt-4">
-          <button
-            onClick={prevLesson}
-            className="px-4 py-2 bg-gray-300 rounded"
-          >
-            Prev
-          </button>
-
-          <button
-            onClick={nextLesson}
-            className="px-4 py-2 bg-blue-500 text-white rounded"
-          >
-            Next
-          </button>
-
-          <button
-            onClick={handleComplete}
-            className="px-4 py-2 bg-green-500 text-white rounded"
-          >
-            Mark Complete
-          </button>
+      {/* VIDEO WRAPPER (CENTERED) */}
+      <div className="w-full max-w-4xl">
+        <div className="w-full aspect-video rounded-lg overflow-hidden bg-black">
+          {currentLesson ? (
+            <VideoPlayer key={currentLesson?._id} lesson={currentLesson} />
+          ) : (
+            <p className="text-white text-center mt-10">
+              No lesson selected
+            </p>
+          )}
         </div>
+      </div>
 
-        {/* 📊 Progress Bar */}
-        <div className="mt-4">
-          <p className="mb-1">Progress: {Math.round(progress)}%</p>
-          <div className="w-full bg-gray-200 h-2 rounded">
-            <div
-              className="bg-green-500 h-2 rounded"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
+      {/* ⏭ CONTROLS */}
+      <div className="flex gap-3 mt-6 flex-wrap justify-center">
+        <button
+          onClick={prevLesson}
+          className="px-4 py-2 bg-gray-300 rounded"
+        >
+          Prev
+        </button>
+
+        <button
+          onClick={nextLesson}
+          className="px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Next
+        </button>
+
+        <button
+          onClick={handleComplete}
+          className="px-4 py-2 bg-green-500 text-white rounded"
+        >
+          Mark Complete
+        </button>
+      </div>
+
+      {/* 📊 PROGRESS */}
+      <div className="w-full max-w-4xl mt-6">
+        <p className="mb-1 text-sm md:text-base">
+          Progress: {Math.round(progress)}%
+        </p>
+
+        <div className="w-full bg-gray-200 h-2 rounded">
+          <div
+            className="bg-green-500 h-2 rounded"
+            style={{ width: `${progress}%` }}
+          />
         </div>
-
       </div>
 
     </div>
-  );
+  </div>
+);
+
+
+
+
 }
